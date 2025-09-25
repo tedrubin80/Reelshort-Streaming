@@ -1,0 +1,18 @@
+[Unit]
+Description=ReelShorts.live Node.js Application
+After=network.target
+
+[Service]
+Type=simple
+User=southerns
+WorkingDirectory=/home/southerns/public_html/web
+ExecStart=/usr/bin/node /home/southerns/public_html/web/server-static.js
+Restart=on-failure
+RestartSec=10
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=reelshorts-app
+Environment=NODE_ENV=production
+
+[Install]
+WantedBy=multi-user.target

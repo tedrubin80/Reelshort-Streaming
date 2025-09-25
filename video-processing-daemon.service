@@ -1,0 +1,29 @@
+[Unit]
+Description=ReelShorts Video Processing Daemon
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=southerns
+ExecStart=/usr/bin/node /home/southerns/southernshortfilms/web/start-processing-daemon.js
+WorkingDirectory=/home/southerns/southernshortfilms/web
+Environment=NODE_ENV=production
+Environment=PROCESSING_DRIVE=/mnt/HC_Volume_103339423
+Environment=MAX_CONCURRENT_PROCESSING=3
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=reelshorts-daemon
+
+# Security
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ReadWritePaths=/mnt/HC_Volume_103339423 /home/southerns/southernshortfilms
+
+[Install]
+WantedBy=multi-user.target

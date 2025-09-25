@@ -1,0 +1,91 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15
+    container_name: southerns_postgres
+    environment:
+      POSTGRES_DB: southerns_db
+      POSTGRES_USER: southerns_user
+      POSTGRES_PASSWORD: southerns_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    networks:
+      - streaming_network
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: southerns_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    networks:
+      - streaming_network
+
+  # SRS (Simple Realtime Server)
+  srs:
+    image: ossrs/srs:5
+    container_name: southerns_srs
+    ports:
+      - "1935:1935"    # RTMP
+      - "8080:8080"    # HTTP API
+      - "1985:1985"    # HTTP FLV
+      - "8000:8000"    # WebRTC
+    volumes:
+      - ./srs/srs.conf:/usr/local/srs/conf/srs.conf
+      - srs_logs:/usr/local/srs/logs
+    networks:
+      - streaming_network
+
+  # FFMPEG Service (for transcoding)
+  ffmpeg:
+    build:
+      context: ./ffmpeg
+      dockerfile: Dockerfile
+    container_name: southerns_ffmpeg
+    volumes:
+      - ./media:/media
+      - ./scripts:/scripts
+    depends_on:
+      - srs
+    networks:
+      - streaming_network
+
+  # Web Application
+  web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    container_name: southerns_web
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=postgresql://southerns_user:southerns_password@postgres:5432/southerns_db
+      - REDIS_URL=redis://redis:6379
+      - SRS_API_URL=http://srs:8080/api/v1
+    depends_on:
+      - postgres
+      - redis
+      - srs
+    volumes:
+      - ./web:/app
+      - /app/node_modules
+    networks:
+      - streaming_network
+
+volumes:
+  postgres_data:
+  redis_data:
+  srs_logs:
+
+networks:
+  streaming_network:
+    driver: bridge
