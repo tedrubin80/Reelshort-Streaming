@@ -1,6 +1,6 @@
-# ReelShorts.live - Short Film Platform
+# 🎬 ReelShorts.live - Video Streaming Platform
 
-A modern web platform for discovering and sharing short films, built with React and Node.js.
+A complete, production-ready video streaming platform built with modern web technologies. Upload, process, and stream videos with automatic compression, multiple quality outputs, and real-time user interactions.
 
 ## 🎬 Features
 

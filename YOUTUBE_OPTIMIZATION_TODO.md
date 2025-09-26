@@ -156,9 +156,9 @@ ffmpeg -i input.mp4 -c:v libx264 -preset slow -crf 23 -pass 2 \
 ### S3 Configuration Template
 ```bash
 # S3 Environment Variables
-export S3_ENDPOINT="hel1.your-objectstorage.com"
-export S3_ACCESS_KEY="EH2S23L8SL690LPYT2K4"
-export S3_SECRET_KEY="ZYETfW1wHPlLLedo2MQgkj7usiM8JYZJgpnVHGnF"
+export S3_ENDPOINT="your-s3-endpoint.com"
+export S3_ACCESS_KEY="YOUR_ACCESS_KEY_HERE"
+export S3_SECRET_KEY="YOUR_SECRET_KEY_HERE"
 export S3_BUCKET_HOT="reelshorts-hot"
 export S3_BUCKET_COOL="reelshorts-cool"
 export S3_BUCKET_ARCHIVE="reelshorts-archive"

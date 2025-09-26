@@ -852,25 +852,6 @@ body {
   font-size: 14px;
 }
 
-.google-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  background-color: #2a303c;
-  border: 1px solid #4a5568;
-  color: #ffffff;
-  border-radius: 4px;
-  padding: 12px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: all 0.2s;
-  width: 100%;
-}
-
-.google-btn:hover {
-  background-color: #1e1e1e;
-}
 
 .auth-switch {
   text-align: center;

@@ -10,7 +10,7 @@ const execAsync = promisify(exec);
 class VideoProcessingService {
     constructor() {
         this.processingPath = process.env.PROCESSING_DRIVE || '/mnt/HC_Volume_103339423';
-        this.scriptsPath = path.join(this.processingPath, 'scripts');
+        this.scriptsPath = path.join(__dirname, '../../../scripts'); // Use scripts from main codebase
         this.inboxPath = path.join(this.processingPath, 'processing', 'inbox');
         this.outputPath = path.join(this.processingPath, 'processing', 'output');
         this.logsPath = path.join(this.processingPath, 'logs');

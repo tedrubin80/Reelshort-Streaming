@@ -88,4 +88,5 @@ temp/
 .cache/
 
 # PM2 ecosystem
-ecosystem.config.js
+ecosystem.config.js*.backup
+.env.backup
