@@ -27,6 +27,8 @@ const subscriptionsRoutes = require('./src/routes/subscriptions');
 const historyRoutes = require('./src/routes/history');
 const playlistsRoutes = require('./src/routes/playlists');
 const notificationsRoutes = require('./src/routes/notifications');
+const shareRoutes = require('./src/routes/share');
+const searchRoutes = require('./src/routes/search');
 
 const app = express();
 const server = http.createServer(app);
@@ -86,6 +88,8 @@ app.use('/api/subscriptions', subscriptionsRoutes);
 app.use('/api/history', historyRoutes);
 app.use('/api/playlists', playlistsRoutes);
 app.use('/api/notifications', notificationsRoutes);
+app.use('/api/share', shareRoutes);
+app.use('/api/search', searchRoutes);
 
 // Serve React app
 app.use(express.static(path.join(__dirname, 'dist')));
