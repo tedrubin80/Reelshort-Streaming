@@ -19,6 +19,9 @@ const uploadRoutes = require('./src/routes/upload');
 const waiverRoutes = require('./src/routes/waivers');
 const monitoringRoutes = require('./src/routes/monitoring');
 const filmsRoutes = require('./src/routes/films');
+const videosRoutes = require('./src/routes/videos');
+const commentsRoutes = require('./src/routes/comments');
+const ratingsRoutes = require('./src/routes/ratings');
 
 const app = express();
 const server = http.createServer(app);
@@ -70,6 +73,9 @@ app.use('/api/upload', uploadRoutes);
 app.use('/api/waivers', waiverRoutes);
 app.use('/api/monitoring', monitoringRoutes);
 app.use('/api/films', filmsRoutes);
+app.use('/api/videos', videosRoutes);
+app.use('/api/comments', commentsRoutes);
+app.use('/api/ratings', ratingsRoutes);
 
 // Serve React app
 app.use(express.static(path.join(__dirname, 'dist')));

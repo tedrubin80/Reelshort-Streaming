@@ -5,6 +5,7 @@ import LoginModal from './components/LoginModal';
 import HomePage from './pages/HomePage';
 import UploadPage from './pages/UploadPage';
 import DashboardPage from './pages/DashboardPage';
+import VideoPage from './pages/VideoPage';
 
 function App() {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
@@ -136,6 +137,10 @@ function App() {
                   onLoginClick={() => setIsLoginOpen(true)}
                 />
               }
+            />
+            <Route
+              path="/watch/:videoId"
+              element={<VideoPage user={user} />}
             />
             <Route
               path="/creator"
