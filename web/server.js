@@ -22,6 +22,11 @@ const filmsRoutes = require('./src/routes/films');
 const videosRoutes = require('./src/routes/videos');
 const commentsRoutes = require('./src/routes/comments');
 const ratingsRoutes = require('./src/routes/ratings');
+const profileRoutes = require('./src/routes/profile');
+const subscriptionsRoutes = require('./src/routes/subscriptions');
+const historyRoutes = require('./src/routes/history');
+const playlistsRoutes = require('./src/routes/playlists');
+const notificationsRoutes = require('./src/routes/notifications');
 
 const app = express();
 const server = http.createServer(app);
@@ -76,6 +81,11 @@ app.use('/api/films', filmsRoutes);
 app.use('/api/videos', videosRoutes);
 app.use('/api/comments', commentsRoutes);
 app.use('/api/ratings', ratingsRoutes);
+app.use('/api/profile', profileRoutes);
+app.use('/api/subscriptions', subscriptionsRoutes);
+app.use('/api/history', historyRoutes);
+app.use('/api/playlists', playlistsRoutes);
+app.use('/api/notifications', notificationsRoutes);
 
 // Serve React app
 app.use(express.static(path.join(__dirname, 'dist')));
