@@ -7,6 +7,7 @@ import UploadPage from './pages/UploadPage';
 import DashboardPage from './pages/DashboardPage';
 import VideoPage from './pages/VideoPage';
 import AdminDashboard from './pages/AdminDashboard';
+import BackstagePage from './pages/BackstagePage';
 
 function App() {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
@@ -146,6 +147,10 @@ function App() {
             <Route
               path="/admin"
               element={<AdminDashboard user={user} />}
+            />
+            <Route
+              path="/backstage"
+              element={<BackstagePage onLogin={handleLogin} />}
             />
             <Route
               path="/creator"
