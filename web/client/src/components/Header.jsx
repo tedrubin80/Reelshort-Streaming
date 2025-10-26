@@ -1,25 +1,32 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
-function Header({ user, onSearchChange, onLoginClick, onMenuClick, onLogout }) {
+function Header({ user, onSearchChange, onLoginClick, onLogout }) {
   const [searchValue, setSearchValue] = useState('');
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
   const location = useLocation();
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
-    onSearchChange(searchValue);
+    if (onSearchChange) {
+      onSearchChange(searchValue);
+    }
+  };
+
+  const toggleMobileMenu = () => {
+    setShowMobileMenu(!showMobileMenu);
   };
 
   return (
     <header className="header">
       <div className="header-left">
-        <button className="menu-btn" onClick={onMenuClick}>
+        <button className="menu-btn" onClick={toggleMobileMenu}>
           <svg viewBox="0 0 24 24" width="24" height="24">
             <path fill="currentColor" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
           </svg>
         </button>
-        
+
         <Link to="/" className="logo">
           <img src="/reelshorts.png" alt="ReelShorts.live" className="logo-icon" width="400" height="50" />
         </Link>
@@ -36,10 +43,61 @@ function Header({ user, onSearchChange, onLoginClick, onMenuClick, onLogout }) {
               <Link to="/dashboard" className={`nav-link ${location.pathname === '/dashboard' ? 'active' : ''}`}>
                 Dashboard
               </Link>
+              {(user.role === 'admin' || user.role === 'moderator') && (
+                <Link to="/admin" className={`nav-link ${location.pathname === '/admin' ? 'active' : ''}`}>
+                  Admin
+                </Link>
+              )}
             </>
           )}
         </nav>
       </div>
+
+      {/* Mobile Menu */}
+      {showMobileMenu && (
+        <div className="mobile-menu-overlay" onClick={() => setShowMobileMenu(false)}>
+          <div className="mobile-menu" onClick={(e) => e.stopPropagation()}>
+            <div className="mobile-menu-header">
+              <Link to="/" className="mobile-logo" onClick={() => setShowMobileMenu(false)}>
+                <img src="/reelshorts.png" alt="ReelShorts.live" width="200" height="25" />
+              </Link>
+              <button className="close-btn" onClick={() => setShowMobileMenu(false)}>
+                <svg viewBox="0 0 24 24" width="24" height="24">
+                  <path fill="currentColor" d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"/>
+                </svg>
+              </button>
+            </div>
+            <nav className="mobile-nav">
+              <Link to="/" className="mobile-nav-link" onClick={() => setShowMobileMenu(false)}>
+                Home
+              </Link>
+              {user ? (
+                <>
+                  <Link to="/upload" className="mobile-nav-link" onClick={() => setShowMobileMenu(false)}>
+                    Upload
+                  </Link>
+                  <Link to="/dashboard" className="mobile-nav-link" onClick={() => setShowMobileMenu(false)}>
+                    Dashboard
+                  </Link>
+                  {(user.role === 'admin' || user.role === 'moderator') && (
+                    <Link to="/admin" className="mobile-nav-link" onClick={() => setShowMobileMenu(false)}>
+                      Admin
+                    </Link>
+                  )}
+                  <div className="mobile-nav-divider"></div>
+                  <button className="mobile-nav-link" onClick={() => { onLogout(); setShowMobileMenu(false); }}>
+                    Sign out
+                  </button>
+                </>
+              ) : (
+                <button className="mobile-nav-link" onClick={() => { onLoginClick(); setShowMobileMenu(false); }}>
+                  Sign in
+                </button>
+              )}
+            </nav>
+          </div>
+        </div>
+      )}
 
       <div className="header-center">
         <form className="search-form" onSubmit={handleSearchSubmit}>
