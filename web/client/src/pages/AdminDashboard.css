@@ -1,0 +1,410 @@
+.admin-dashboard {
+  min-height: 100vh;
+  background: #f5f5f5;
+  padding: 20px;
+}
+
+.admin-header {
+  background: #1a1a2e;
+  color: white;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.admin-header h1 {
+  margin: 0;
+  font-size: 28px;
+}
+
+.admin-user-info {
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+.admin-tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.admin-tabs button {
+  padding: 12px 24px;
+  background: white;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.admin-tabs button:hover {
+  border-color: #e50914;
+  color: #e50914;
+}
+
+.admin-tabs button.active {
+  background: #e50914;
+  color: white;
+  border-color: #e50914;
+}
+
+.admin-content {
+  background: white;
+  border-radius: 8px;
+  padding: 30px;
+  min-height: 400px;
+}
+
+.admin-error {
+  background: #ffebee;
+  color: #c62828;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.admin-loading {
+  text-align: center;
+  padding: 40px;
+  font-size: 18px;
+  color: #666;
+}
+
+/* Statistics Grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.stat-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.stat-card.alert {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.stat-card.warn {
+  background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+}
+
+.stat-card h3 {
+  margin: 0 0 10px 0;
+  font-size: 14px;
+  opacity: 0.9;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.stat-value {
+  font-size: 36px;
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+.stat-subtext {
+  font-size: 13px;
+  opacity: 0.8;
+}
+
+/* Moderation Queue */
+.queue-filters {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.queue-filters button {
+  padding: 10px 20px;
+  background: #f0f0f0;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.queue-filters button:hover {
+  background: #e50914;
+  color: white;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #999;
+  font-size: 18px;
+}
+
+.video-queue-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.queue-item {
+  border: 2px solid #eee;
+  border-radius: 8px;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.2s;
+}
+
+.queue-item:hover {
+  border-color: #e50914;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.queue-video-info {
+  display: flex;
+  gap: 20px;
+  flex: 1;
+}
+
+.queue-video-info img {
+  width: 160px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.queue-video-info h4 {
+  margin: 0 0 10px 0;
+  font-size: 18px;
+}
+
+.queue-video-info p {
+  margin: 5px 0;
+  font-size: 14px;
+  color: #666;
+}
+
+.status-badge {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.status-badge.pending {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.status-badge.flagged {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.status-badge.approved {
+  background: #d4edda;
+  color: #155724;
+}
+
+.flag-count {
+  color: #e50914 !important;
+  font-weight: 600;
+}
+
+.queue-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 120px;
+}
+
+.queue-actions button,
+.queue-actions a {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.btn-approve {
+  background: #28a745;
+  color: white;
+}
+
+.btn-approve:hover {
+  background: #218838;
+}
+
+.btn-reject {
+  background: #dc3545;
+  color: white;
+}
+
+.btn-reject:hover {
+  background: #c82333;
+}
+
+.btn-view {
+  background: #007bff;
+  color: white;
+}
+
+.btn-view:hover {
+  background: #0056b3;
+}
+
+/* Users Management */
+.users-filters {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.users-filters input,
+.users-filters select {
+  padding: 10px 15px;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  flex: 1;
+  min-width: 200px;
+}
+
+.users-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.users-table th {
+  background: #f8f9fa;
+  padding: 15px;
+  text-align: left;
+  font-weight: 600;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.users-table td {
+  padding: 15px;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.users-table tr.banned-user {
+  background: #fff5f5;
+}
+
+.role-badge {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.role-badge.admin {
+  background: #e50914;
+  color: white;
+}
+
+.role-badge.moderator {
+  background: #ff9800;
+  color: white;
+}
+
+.role-badge.creator {
+  background: #2196f3;
+  color: white;
+}
+
+.role-badge.user {
+  background: #9e9e9e;
+  color: white;
+}
+
+.status-active {
+  color: #28a745;
+  font-weight: 600;
+}
+
+.status-banned {
+  color: #dc3545;
+  font-weight: 600;
+}
+
+.btn-ban {
+  padding: 8px 16px;
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.btn-ban:hover {
+  background: #c82333;
+}
+
+.btn-unban {
+  padding: 8px 16px;
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.btn-unban:hover {
+  background: #218838;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .admin-dashboard {
+    padding: 10px;
+  }
+
+  .admin-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .queue-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .queue-actions {
+    width: 100%;
+  }
+
+  .users-table {
+    font-size: 12px;
+  }
+
+  .users-table th,
+  .users-table td {
+    padding: 10px 5px;
+  }
+}

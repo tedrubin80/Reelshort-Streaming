@@ -2,14 +2,117 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ReelShorts.live</title>
-    <meta name="description" content="Discover and watch amazing short films on ReelShorts.live">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>ReelShorts.live - Discover Amazing Short Films</title>
+    <meta name="description" content="Discover and watch amazing short films from independent filmmakers worldwide. Upload, share, and enjoy quality short film content.">
+
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#e50914">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="ReelShorts">
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
+
+    <!-- Icons -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/icon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-180x180.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/icons/icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/icons/icon-120x120.png">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://reelshorts.live/">
+    <meta property="og:title" content="ReelShorts.live - Short Film Platform">
+    <meta property="og:description" content="Discover and watch amazing short films from independent filmmakers worldwide.">
+    <meta property="og:image" content="https://reelshorts.live/og-image.jpg">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://reelshorts.live/">
+    <meta property="twitter:title" content="ReelShorts.live - Short Film Platform">
+    <meta property="twitter:description" content="Discover and watch amazing short films from independent filmmakers worldwide.">
+    <meta property="twitter:image" content="https://reelshorts.live/twitter-image.jpg">
+
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then((registration) => {
+                        console.log('✅ Service Worker registered:', registration.scope);
+
+                        // Check for updates
+                        registration.addEventListener('updatefound', () => {
+                            const newWorker = registration.installing;
+                            newWorker.addEventListener('statechange', () => {
+                                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                    // New service worker available
+                                    if (confirm('New version available! Reload to update?')) {
+                                        newWorker.postMessage({ type: 'SKIP_WAITING' });
+                                        window.location.reload();
+                                    }
+                                }
+                            });
+                        });
+                    })
+                    .catch((error) => {
+                        console.log('❌ Service Worker registration failed:', error);
+                    });
+            });
+
+            // Listen for controller change and reload
+            navigator.serviceWorker.addEventListener('controllerchange', () => {
+                window.location.reload();
+            });
+        }
+
+        // Install prompt
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            console.log('💾 Install prompt ready');
+
+            // Show custom install button if you have one
+            const installButton = document.getElementById('install-button');
+            if (installButton) {
+                installButton.style.display = 'block';
+                installButton.addEventListener('click', async () => {
+                    if (deferredPrompt) {
+                        deferredPrompt.prompt();
+                        const { outcome } = await deferredPrompt.userChoice;
+                        console.log(`User response: ${outcome}`);
+                        deferredPrompt = null;
+                    }
+                });
+            }
+        });
+
+        // Track installation
+        window.addEventListener('appinstalled', () => {
+            console.log('✅ PWA installed successfully');
+            deferredPrompt = null;
+        });
+    </script>
 </head>
 <body>
     <div id="root"></div>
+
+    <noscript>
+        <div style="padding: 20px; text-align: center; font-family: Arial, sans-serif;">
+            <h2>JavaScript Required</h2>
+            <p>ReelShorts requires JavaScript to function. Please enable JavaScript in your browser settings.</p>
+        </div>
+    </noscript>
 </body>
 </html>

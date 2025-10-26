@@ -7,6 +7,8 @@ const compression = require('compression');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 const path = require('path');
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./src/config/swagger');
 require('dotenv').config();
 
 const { initializeDatabase } = require('./src/config/database');
@@ -29,6 +31,10 @@ const playlistsRoutes = require('./src/routes/playlists');
 const notificationsRoutes = require('./src/routes/notifications');
 const shareRoutes = require('./src/routes/share');
 const searchRoutes = require('./src/routes/search');
+const adminRoutes = require('./src/routes/admin');
+const analyticsRoutes = require('./src/routes/analytics');
+const recommendationsRoutes = require('./src/routes/recommendations');
+const cdnRoutes = require('./src/routes/cdn');
 
 const app = express();
 const server = http.createServer(app);
@@ -63,12 +69,19 @@ app.use(cors({
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
-    res.json({ 
-        status: 'ok', 
+    res.json({
+        status: 'ok',
         timestamp: new Date().toISOString(),
         environment: process.env.NODE_ENV || 'development'
     });
 });
+
+// API Documentation
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+    customCss: '.swagger-ui .topbar { display: none }',
+    customSiteTitle: 'ReelShorts API Documentation',
+    customfavIcon: '/static/favicon.ico'
+}));
 
 // Serve static files
 app.use('/static', express.static(path.join(__dirname, 'public')));
@@ -90,6 +103,10 @@ app.use('/api/playlists', playlistsRoutes);
 app.use('/api/notifications', notificationsRoutes);
 app.use('/api/share', shareRoutes);
 app.use('/api/search', searchRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/analytics', analyticsRoutes);
+app.use('/api/recommendations', recommendationsRoutes);
+app.use('/api/cdn', cdnRoutes);
 
 // Serve React app
 app.use(express.static(path.join(__dirname, 'dist')));
@@ -197,9 +214,15 @@ async function startServer() {
         server.listen(PORT, () => {
             console.log(`🎬 ReelShorts Server running on port ${PORT}`);
             console.log(`🌐 Client URL: ${process.env.CLIENT_URL || `http://localhost:${PORT}`}`);
+            console.log(`📚 API Documentation: http://localhost:${PORT}/api-docs`);
             console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
             console.log(`💾 Processing Drive: ${process.env.PROCESSING_DRIVE || '/mnt/HC_Volume_103339423'}`);
             console.log(`☁️  S3 Endpoint: ${process.env.S3_ENDPOINT || 'Not configured'}`);
+
+            // Log CDN status
+            if (process.env.USE_CDN === 'true') {
+                console.log(`✅ Bunny.net CDN enabled - Library: ${process.env.BUNNY_LIBRARY_ID || 'Not configured'}`);
+            }
         });
     } catch (error) {
         console.error('Failed to start server:', error);

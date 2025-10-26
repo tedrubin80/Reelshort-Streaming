@@ -6,6 +6,7 @@ import HomePage from './pages/HomePage';
 import UploadPage from './pages/UploadPage';
 import DashboardPage from './pages/DashboardPage';
 import VideoPage from './pages/VideoPage';
+import AdminDashboard from './pages/AdminDashboard';
 
 function App() {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
@@ -141,6 +142,10 @@ function App() {
             <Route
               path="/watch/:videoId"
               element={<VideoPage user={user} />}
+            />
+            <Route
+              path="/admin"
+              element={<AdminDashboard user={user} />}
             />
             <Route
               path="/creator"
