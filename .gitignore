@@ -90,3 +90,6 @@ temp/
 # PM2 ecosystem
 ecosystem.config.js*.backup
 .env.backup
+
+# Confidential documentation
+yyzbackstage2112/
