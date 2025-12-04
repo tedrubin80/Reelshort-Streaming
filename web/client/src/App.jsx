@@ -40,10 +40,10 @@ function App() {
 
       const data = await response.json();
 
-      if (data.success && data.user) {
+      if (data.success && data.data?.user) {
         const userData = {
-          ...data.user,
-          token: data.token
+          ...data.data.user,
+          token: data.data.token
         };
         setUser(userData);
         localStorage.setItem('user', JSON.stringify(userData));
@@ -70,10 +70,10 @@ function App() {
 
       const data = await response.json();
 
-      if (data.success && data.user) {
+      if (data.success && data.data?.user) {
         const newUser = {
-          ...data.user,
-          token: data.token
+          ...data.data.user,
+          token: data.data.token
         };
         setUser(newUser);
         localStorage.setItem('user', JSON.stringify(newUser));

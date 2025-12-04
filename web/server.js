@@ -86,6 +86,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
 // Serve static files
 app.use('/static', express.static(path.join(__dirname, 'public')));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/walkthrough', express.static(path.join(__dirname, 'walkthrough')));
 
 // Routes
 app.use('/api/auth', authRoutes);

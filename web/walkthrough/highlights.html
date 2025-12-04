@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ReelShorts Platform - Feature Highlights</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);
+            color: #e8f4f8;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+            padding: 40px 0;
+        }
+
+        .logo {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #e50914 0%, #ff6b6b 50%, #ffd93d 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        header p {
+            font-size: 1.25rem;
+            color: #a0aec0;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .video-section {
+            margin-bottom: 60px;
+            text-align: center;
+        }
+
+        .video-section h2 {
+            font-size: 1.75rem;
+            margin-bottom: 20px;
+        }
+
+        .video-container {
+            max-width: 960px;
+            margin: 0 auto;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .video-container video {
+            width: 100%;
+            display: block;
+        }
+
+        .gallery-section h2 {
+            font-size: 1.75rem;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .gallery-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(229, 9, 20, 0.2);
+            border-color: rgba(229, 9, 20, 0.3);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .gallery-item-info {
+            padding: 20px;
+        }
+
+        .gallery-item-info h3 {
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            color: #e8f4f8;
+        }
+
+        .gallery-item-info p {
+            font-size: 0.9rem;
+            color: #a0aec0;
+        }
+
+        .gallery-item-number {
+            display: inline-block;
+            background: linear-gradient(135deg, #e50914 0%, #ff6b6b 100%);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        /* Lightbox styles */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+        }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+        .lightbox-content {
+            position: relative;
+            max-width: 95%;
+            max-height: 95%;
+        }
+
+        .lightbox-content img {
+            max-width: 100%;
+            max-height: 85vh;
+            border-radius: 8px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+        }
+
+        .lightbox-info {
+            position: absolute;
+            bottom: -50px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            color: #e8f4f8;
+        }
+
+        .lightbox-info h3 {
+            font-size: 1.25rem;
+            margin-bottom: 5px;
+        }
+
+        .lightbox-info p {
+            color: #a0aec0;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 3rem;
+            color: #e8f4f8;
+            cursor: pointer;
+            transition: color 0.3s;
+            line-height: 1;
+            z-index: 1001;
+        }
+
+        .lightbox-close:hover {
+            color: #e50914;
+        }
+
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 3rem;
+            color: #e8f4f8;
+            cursor: pointer;
+            padding: 20px;
+            transition: color 0.3s;
+            user-select: none;
+        }
+
+        .lightbox-nav:hover {
+            color: #e50914;
+        }
+
+        .lightbox-prev {
+            left: 10px;
+        }
+
+        .lightbox-next {
+            right: 10px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            margin-top: 60px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #718096;
+        }
+
+        footer a {
+            color: #e50914;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.75rem;
+            }
+
+            .logo {
+                font-size: 2rem;
+            }
+
+            .gallery {
+                grid-template-columns: 1fr;
+            }
+
+            .lightbox-nav {
+                font-size: 2rem;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">ReelShorts</div>
+            <h1>Platform Feature Highlights</h1>
+            <p>Explore the comprehensive video streaming platform designed for short film creators and viewers worldwide.</p>
+        </header>
+
+        <section class="video-section">
+            <h2>Full Platform Walkthrough</h2>
+            <div class="video-container">
+                <video controls poster="screenshots/01-homepage.png">
+                    <source src="video/walkthrough.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+        </section>
+
+        <section class="gallery-section">
+            <h2>Feature Screenshots</h2>
+            <div class="gallery" id="gallery">
+                <!-- Gallery items will be dynamically loaded -->
+            </div>
+        </section>
+
+        <footer>
+            <p>Generated for <a href="https://reelshorts.live">ReelShorts.live</a> - The Ultimate Short Film Platform</p>
+        </footer>
+    </div>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox">
+        <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+        <span class="lightbox-nav lightbox-prev" onclick="navigateLightbox(-1)">&#10094;</span>
+        <div class="lightbox-content">
+            <img id="lightbox-img" src="" alt="">
+            <div class="lightbox-info">
+                <h3 id="lightbox-title"></h3>
+                <p id="lightbox-desc"></p>
+            </div>
+        </div>
+        <span class="lightbox-nav lightbox-next" onclick="navigateLightbox(1)">&#10095;</span>
+    </div>
+
+    <script>
+        // Screenshot data - will be populated from manifest or hardcoded fallback
+        let screenshots = [];
+        let currentIndex = 0;
+
+        // Default screenshots (fallback if manifest not available)
+        const defaultScreenshots = [
+            { name: "01-homepage", filename: "01-homepage.png", description: "Main homepage with video grid and category navigation" },
+            { name: "02-video-grid", filename: "02-video-grid.png", description: "Video grid showing available short films" },
+            { name: "03-category-filter", filename: "03-category-filter.png", description: "Filtered videos by category" },
+            { name: "04-upload-page", filename: "04-upload-page.png", description: "Video upload interface for creators" },
+            { name: "05-dashboard", filename: "05-dashboard.png", description: "Creator dashboard overview" },
+            { name: "06-backstage-login", filename: "06-backstage-login.png", description: "Admin backstage login portal" },
+            { name: "07-login-form", filename: "07-login-form.png", description: "Admin login form filled" },
+            { name: "08-admin-dashboard", filename: "08-admin-dashboard.png", description: "Admin dashboard with platform overview" },
+            { name: "09-admin-features", filename: "09-admin-features.png", description: "Admin moderation and analytics tools" },
+            { name: "10-homepage-final", filename: "10-homepage-final.png", description: "Homepage with full navigation visible" },
+            { name: "11-mobile-view", filename: "11-mobile-view.png", description: "Mobile responsive design" },
+            { name: "12-mobile-menu", filename: "12-mobile-menu.png", description: "Mobile navigation menu" }
+        ];
+
+        // Format name for display
+        function formatName(name) {
+            return name
+                .replace(/^\d+-/, '')
+                .split('-')
+                .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                .join(' ');
+        }
+
+        // Load screenshots
+        async function loadScreenshots() {
+            try {
+                const response = await fetch('screenshots/manifest.json');
+                if (response.ok) {
+                    const manifest = await response.json();
+                    screenshots = manifest.screenshots || defaultScreenshots;
+                } else {
+                    screenshots = defaultScreenshots;
+                }
+            } catch (e) {
+                screenshots = defaultScreenshots;
+            }
+            renderGallery();
+        }
+
+        // Render gallery
+        function renderGallery() {
+            const gallery = document.getElementById('gallery');
+            gallery.innerHTML = screenshots.map((item, index) => `
+                <div class="gallery-item" onclick="openLightbox(${index})">
+                    <img src="screenshots/${item.filename}" alt="${item.description}" loading="lazy"
+                         onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22200%22><rect fill=%22%231a1a2e%22 width=%22100%%22 height=%22100%%22/><text fill=%22%23666%22 font-family=%22sans-serif%22 font-size=%2218%22 text-anchor=%22middle%22 x=%2250%%22 y=%2250%%22>Screenshot Pending</text></svg>'">
+                    <div class="gallery-item-info">
+                        <span class="gallery-item-number">Step ${index + 1}</span>
+                        <h3>${formatName(item.name)}</h3>
+                        <p>${item.description}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Lightbox functions
+        function openLightbox(index) {
+            currentIndex = index;
+            updateLightbox();
+            document.getElementById('lightbox').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function updateLightbox() {
+            const item = screenshots[currentIndex];
+            document.getElementById('lightbox-img').src = `screenshots/${item.filename}`;
+            document.getElementById('lightbox-title').textContent = formatName(item.name);
+            document.getElementById('lightbox-desc').textContent = item.description;
+        }
+
+        function navigateLightbox(direction) {
+            currentIndex = (currentIndex + direction + screenshots.length) % screenshots.length;
+            updateLightbox();
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (!document.getElementById('lightbox').classList.contains('active')) return;
+
+            if (e.key === 'Escape') closeLightbox();
+            if (e.key === 'ArrowLeft') navigateLightbox(-1);
+            if (e.key === 'ArrowRight') navigateLightbox(1);
+        });
+
+        // Close lightbox on background click
+        document.getElementById('lightbox').addEventListener('click', (e) => {
+            if (e.target.id === 'lightbox') closeLightbox();
+        });
+
+        // Initialize
+        loadScreenshots();
+    </script>
+</body>
+</html>

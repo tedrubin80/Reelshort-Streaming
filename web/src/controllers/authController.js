@@ -159,7 +159,8 @@ class AuthController {
                         displayName: user.display_name,
                         verified: user.verified,
                         avatarUrl: user.avatar_url,
-                        bio: user.bio
+                        bio: user.bio,
+                        role: user.role || 'user'
                     },
                     token,
                     refreshToken
