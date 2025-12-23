@@ -38,7 +38,9 @@ class User {
 
     static async findByEmail(email) {
         const result = await query(
-            'SELECT * FROM users WHERE email = $1',
+            `SELECT id, username, email, password_hash, display_name, bio, avatar_url,
+                    role, verified, subscriber_count, total_views, created_at, updated_at
+             FROM users WHERE email = $1`,
             [email]
         );
         return result.rows[0] || null;
@@ -46,7 +48,9 @@ class User {
 
     static async findByUsername(username) {
         const result = await query(
-            'SELECT * FROM users WHERE username = $1',
+            `SELECT id, username, email, password_hash, display_name, bio, avatar_url,
+                    role, verified, subscriber_count, total_views, created_at, updated_at
+             FROM users WHERE username = $1`,
             [username]
         );
         return result.rows[0] || null;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
 function Header({ user, onSearchChange, onLoginClick, onLogout }) {
@@ -14,15 +14,32 @@ function Header({ user, onSearchChange, onLoginClick, onLogout }) {
     }
   };
 
-  const toggleMobileMenu = () => {
-    setShowMobileMenu(!showMobileMenu);
-  };
+  const toggleMobileMenu = useCallback(() => {
+    setShowMobileMenu(prev => !prev);
+  }, []);
+
+  const closeMobileMenu = useCallback(() => {
+    setShowMobileMenu(false);
+  }, []);
+
+  // Handle ESC key to close menus
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setShowMobileMenu(false);
+        setShowUserMenu(false);
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   return (
     <header className="header">
+      <a href="#main-content" className="skip-link">Skip to main content</a>
       <div className="header-left">
-        <button className="menu-btn" onClick={toggleMobileMenu}>
-          <svg viewBox="0 0 24 24" width="24" height="24">
+        <button className="menu-btn" onClick={toggleMobileMenu} aria-label="Open navigation menu" aria-expanded={showMobileMenu}>
+          <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
             <path fill="currentColor" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
           </svg>
         </button>
@@ -55,57 +72,60 @@ function Header({ user, onSearchChange, onLoginClick, onLogout }) {
 
       {/* Mobile Menu */}
       {showMobileMenu && (
-        <div className="mobile-menu-overlay" onClick={() => setShowMobileMenu(false)}>
-          <div className="mobile-menu" onClick={(e) => e.stopPropagation()}>
+        <div className="mobile-menu-overlay" onClick={closeMobileMenu} role="dialog" aria-modal="true" aria-label="Navigation menu">
+          <nav className="mobile-menu" onClick={(e) => e.stopPropagation()} role="navigation">
             <div className="mobile-menu-header">
-              <Link to="/" className="mobile-logo" onClick={() => setShowMobileMenu(false)}>
-                <img src="/reelshorts.png" alt="ReelShorts.live" width="200" height="25" />
+              <Link to="/" className="mobile-logo" onClick={closeMobileMenu}>
+                <img src="/reelshorts.png" alt="ReelShorts.live - Go to homepage" width="200" height="25" />
               </Link>
-              <button className="close-btn" onClick={() => setShowMobileMenu(false)}>
-                <svg viewBox="0 0 24 24" width="24" height="24">
+              <button className="close-btn" onClick={closeMobileMenu} aria-label="Close navigation menu">
+                <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
                   <path fill="currentColor" d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"/>
                 </svg>
               </button>
             </div>
-            <nav className="mobile-nav">
-              <Link to="/" className="mobile-nav-link" onClick={() => setShowMobileMenu(false)}>
+            <div className="mobile-nav-links">
+              <Link to="/" className="mobile-nav-link" onClick={closeMobileMenu}>
                 Home
               </Link>
               {user && (
                 <>
-                  <Link to="/upload" className="mobile-nav-link" onClick={() => setShowMobileMenu(false)}>
+                  <Link to="/upload" className="mobile-nav-link" onClick={closeMobileMenu}>
                     Upload
                   </Link>
-                  <Link to="/dashboard" className="mobile-nav-link" onClick={() => setShowMobileMenu(false)}>
+                  <Link to="/dashboard" className="mobile-nav-link" onClick={closeMobileMenu}>
                     Dashboard
                   </Link>
                   {(user.role === 'admin' || user.role === 'moderator') && (
-                    <Link to="/admin" className="mobile-nav-link" onClick={() => setShowMobileMenu(false)}>
+                    <Link to="/admin" className="mobile-nav-link" onClick={closeMobileMenu}>
                       Admin
                     </Link>
                   )}
-                  <div className="mobile-nav-divider"></div>
-                  <button className="mobile-nav-link" onClick={() => { onLogout(); setShowMobileMenu(false); }}>
+                  <div className="mobile-nav-divider" role="separator"></div>
+                  <button className="mobile-nav-link" onClick={() => { onLogout(); closeMobileMenu(); }}>
                     Sign out
                   </button>
                 </>
               )}
-            </nav>
-          </div>
+            </div>
+          </nav>
         </div>
       )}
 
       <div className="header-center">
-        <form className="search-form" onSubmit={handleSearchSubmit}>
+        <form className="search-form" onSubmit={handleSearchSubmit} role="search">
+          <label htmlFor="search-input" className="visually-hidden">Search videos</label>
           <input
-            type="text"
+            id="search-input"
+            type="search"
             className="search-input"
-            placeholder="Search"
+            placeholder="Search videos"
             value={searchValue}
             onChange={(e) => setSearchValue(e.target.value)}
+            aria-label="Search videos"
           />
-          <button type="submit" className="search-btn">
-            <svg viewBox="0 0 24 24" width="24" height="24">
+          <button type="submit" className="search-btn" aria-label="Submit search">
+            <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
               <path fill="currentColor" d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z"/>
             </svg>
           </button>
@@ -115,14 +135,14 @@ function Header({ user, onSearchChange, onLoginClick, onLogout }) {
       <div className="header-right">
         {user && (
           <>
-            <button className="icon-btn upload-btn">
-              <svg viewBox="0 0 24 24" width="24" height="24">
+            <Link to="/upload" className="icon-btn upload-btn" aria-label="Create new video">
+              <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
                 <path fill="currentColor" d="M17,10.5V7A1,1 0 0,0 16,6H4A1,1 0 0,0 3,7V17A1,1 0 0,0 4,18H16A1,1 0 0,0 17,17V13.5L21,17.5V6.5L17,10.5Z"/>
               </svg>
-            </button>
+            </Link>
 
-            <button className="icon-btn">
-              <svg viewBox="0 0 24 24" width="24" height="24">
+            <button className="icon-btn" aria-label="Notifications">
+              <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
                 <path fill="currentColor" d="M10,21H14A2,2 0 0,1 12,23A2,2 0 0,1 10,21M21,19V20H3V19L5,17V11C5,7.9 7.03,5.17 10,4.29C10,4.19 10,4.1 10,4A2,2 0 0,1 12,2A2,2 0 0,1 14,4C14,4.1 14,4.19 14,4.29C16.97,5.17 19,7.9 19,11V17L21,19M17,11A5,5 0 0,0 12,6A5,5 0 0,0 7,11V18H17V11Z"/>
               </svg>
             </button>
@@ -131,6 +151,9 @@ function Header({ user, onSearchChange, onLoginClick, onLogout }) {
               <button
                 className="user-avatar-btn"
                 onClick={() => setShowUserMenu(!showUserMenu)}
+                aria-label="User menu"
+                aria-expanded={showUserMenu}
+                aria-haspopup="menu"
               >
                 <img
                   src={user.avatar || `https://ui-avatars.com/api/?name=${user.name}&background=ff6b6b&color=fff`}

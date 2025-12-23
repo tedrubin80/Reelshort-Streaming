@@ -1,13 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Header from './components/Header';
 import LoginModal from './components/LoginModal';
-import HomePage from './pages/HomePage';
-import UploadPage from './pages/UploadPage';
-import DashboardPage from './pages/DashboardPage';
-import VideoPage from './pages/VideoPage';
-import AdminDashboard from './pages/AdminDashboard';
-import BackstagePage from './pages/BackstagePage';
+import ErrorBoundary from './components/ErrorBoundary';
+
+// Lazy load page components for code splitting
+const HomePage = lazy(() => import('./pages/HomePage'));
+const UploadPage = lazy(() => import('./pages/UploadPage'));
+const DashboardPage = lazy(() => import('./pages/DashboardPage'));
+const VideoPage = lazy(() => import('./pages/VideoPage'));
+const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
+const BackstagePage = lazy(() => import('./pages/BackstagePage'));
+
+// Loading spinner component for Suspense fallback
+const PageLoader = () => (
+  <div className="page-loading">
+    <div className="loading-spinner"></div>
+    <p>Loading...</p>
+  </div>
+);
 
 function App() {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
@@ -104,70 +115,74 @@ function App() {
 
   return (
     <Router>
-      <div className="app">
-        <Header
-          user={user}
-          onLoginClick={() => setIsLoginOpen(true)}
-          onLogout={handleLogout}
-        />
-
-        <div className="app-body">
-          <Routes>
-            <Route
-              path="/"
-              element={
-                <HomePage
-                  user={user}
-                  onLoginClick={() => setIsLoginOpen(true)}
-                />
-              }
-            />
-            <Route
-              path="/upload"
-              element={
-                <UploadPage
-                  user={user}
-                  onLoginClick={() => setIsLoginOpen(true)}
-                />
-              }
-            />
-            <Route
-              path="/dashboard"
-              element={
-                <DashboardPage
-                  user={user}
-                  onLoginClick={() => setIsLoginOpen(true)}
-                />
-              }
-            />
-            <Route
-              path="/watch/:videoId"
-              element={<VideoPage user={user} />}
-            />
-            <Route
-              path="/admin"
-              element={<AdminDashboard user={user} />}
-            />
-            <Route
-              path="/backstage"
-              element={<BackstagePage onLogin={handleLogin} />}
-            />
-            <Route
-              path="/creator"
-              element={<Navigate to="/dashboard" replace />}
-            />
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </div>
-
-        {isLoginOpen && (
-          <LoginModal
-            onClose={() => setIsLoginOpen(false)}
-            onLogin={handleLogin}
-            onRegister={handleRegister}
+      <ErrorBoundary>
+        <div className="app">
+          <Header
+            user={user}
+            onLoginClick={() => setIsLoginOpen(true)}
+            onLogout={handleLogout}
           />
-        )}
-      </div>
+
+          <main className="app-body" id="main-content">
+            <Suspense fallback={<PageLoader />}>
+              <Routes>
+                <Route
+                  path="/"
+                  element={
+                    <HomePage
+                      user={user}
+                      onLoginClick={() => setIsLoginOpen(true)}
+                    />
+                  }
+                />
+                <Route
+                  path="/upload"
+                  element={
+                    <UploadPage
+                      user={user}
+                      onLoginClick={() => setIsLoginOpen(true)}
+                    />
+                  }
+                />
+                <Route
+                  path="/dashboard"
+                  element={
+                    <DashboardPage
+                      user={user}
+                      onLoginClick={() => setIsLoginOpen(true)}
+                    />
+                  }
+                />
+                <Route
+                  path="/watch/:videoId"
+                  element={<VideoPage user={user} />}
+                />
+                <Route
+                  path="/admin"
+                  element={<AdminDashboard user={user} />}
+                />
+                <Route
+                  path="/backstage"
+                  element={<BackstagePage onLogin={handleLogin} />}
+                />
+                <Route
+                  path="/creator"
+                  element={<Navigate to="/dashboard" replace />}
+                />
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Routes>
+            </Suspense>
+          </main>
+
+          {isLoginOpen && (
+            <LoginModal
+              onClose={() => setIsLoginOpen(false)}
+              onLogin={handleLogin}
+              onRegister={handleRegister}
+            />
+          )}
+        </div>
+      </ErrorBoundary>
     </Router>
   );
 }

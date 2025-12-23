@@ -38,9 +38,20 @@ const cdnRoutes = require('./src/routes/cdn');
 
 const app = express();
 const server = http.createServer(app);
+// Validate required environment variables
+if (!process.env.CLIENT_URL) {
+    console.warn('⚠️  CLIENT_URL not set, defaulting to https://reelshorts.live');
+}
+
+const ALLOWED_ORIGINS = [
+    process.env.CLIENT_URL,
+    'https://reelshorts.live',
+    'https://www.reelshorts.live'
+].filter(Boolean);
+
 const io = socketIo(server, {
     cors: {
-        origin: process.env.CLIENT_URL || "http://37.27.220.18",
+        origin: ALLOWED_ORIGINS,
         methods: ["GET", "POST"]
     }
 });
@@ -63,9 +74,22 @@ app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
 // CORS
 app.use(cors({
-    origin: process.env.CLIENT_URL || "http://37.27.220.18",
+    origin: ALLOWED_ORIGINS,
     credentials: true
 }));
+
+// HTTP Caching headers for static assets
+app.use((req, res, next) => {
+    // Static assets - 1 year cache
+    if (req.url.match(/\.(js|css|png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot|ico)$/)) {
+        res.set('Cache-Control', 'public, max-age=31536000, immutable');
+    }
+    // HTML - short cache with revalidation
+    else if (req.url.endsWith('.html') || req.url === '/') {
+        res.set('Cache-Control', 'public, max-age=3600, must-revalidate');
+    }
+    next();
+});
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
